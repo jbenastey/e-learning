@@ -38,12 +38,10 @@ class Welcome extends CI_Controller
         /*$data['modul'] = $this->modul->get_modul();*/
 
         $data['dosen'] = $this->modul->get_dosen_by_nip($nip);
-
-//         echo '<pre>';print_r($data['dosen']);exit;
-
         $data['matkulDosen'] = $this->modul->get_matkul_dosen($data['dosen']['id_dosen']);
         $data['mahasiswa']=$this->modul->get_kelas($this->session->userdata('id_pengguna'));
 
+//         echo '<pre>';print_r($data['mahasiswa']);exit;
 
         $this->load->view('templates/header', $data);
         $this->load->view('welcome_message');
@@ -78,8 +76,8 @@ class Welcome extends CI_Controller
                     $this->session->set_flashdata('alert','kelas_tidak_ada');
                     redirect(base_url());
                 }
-                /*var_dump($paket);
-                exit();*/
+            /*var_dump($paket);
+            exit();*/
 //
             }
             else{
@@ -92,4 +90,5 @@ class Welcome extends CI_Controller
             show_404();
         }
     }
+
 }

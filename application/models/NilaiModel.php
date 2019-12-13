@@ -30,29 +30,13 @@ class NilaiModel extends CI_Model
         $this->db->from('nilai');
 
         //fungsi db where : param1 = nama kolom, param2 = nilai yang diinginkan
-        $this->db->where('id_hasil', $idNilai);
+        $this->db->where('id_nilai', $idNilai);
 
         //menyimpan data berupa objek ke variabel pengguna
         $nilai = $this->db->get();
 
         //mengubah objek menjadi array/baris dan mengembalikan nilainya ke fungsi get_pengguna_by_id
         return $nilai->row_array();
-    }
-    public function get_nilai_by_subModul($idSubModul)
-    {
-        $this->db->select('*');
-        $this->db->from('nilai');
-
-        $this->db->join('ujian', 'ujian.id_sub_modul = nilai.id_ujian','left');
-        $this->db->join('pengguna', 'pengguna.id_pengguna = nilai.id_pengguna','left');
-        //fungsi db where : param1 = nama kolom, param2 = nilai yang diinginkan
-        $this->db->where('id_sub_modul', $idSubModul);
-
-        //menyimpan data berupa objek ke variabel pengguna
-        $nilai = $this->db->get();
-
-        //mengubah objek menjadi array/baris dan mengembalikan nilainya ke fungsi get_pengguna_by_id
-        return $nilai->result_array();
     }
 
 //operasi insert

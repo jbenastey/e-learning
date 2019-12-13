@@ -2,12 +2,7 @@ $(document).ready(function () {
 
     $('#datatable').DataTable();
 
-    $('.summernotejawab').summernote({
-        height: 200
-    });
-    $('.summernote').summernote({
-        height: 300
-    });
+
 //    ----------------------------------
 
     $(".next-step").click(function (e) {
@@ -28,16 +23,14 @@ $(document).ready(function () {
     var durasi = $('#durasi').val();
     $(function() {
         $("#waktu").countdowntimer({
-			dateAndTime : durasi,
+            minutes: durasi,
             displayFormat : "H:M:S",
-			size : "lg",
             timeUp: waktuHabis
         });
     });
 
     function waktuHabis() {
-    	alert('waktu sudah habis');
-        $('#btn-submit-soal').click();
+        $('#selesaiUjian').click();
     }
 
 });

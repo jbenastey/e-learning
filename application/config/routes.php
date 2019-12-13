@@ -12,8 +12,7 @@ $route['pengguna/hapus/(:any)']='pengguna/hapus/$1';
 //end route untuk pengguna
 $route['login']='auth/login';
 $route['logout']='auth/logout';
-$route['register_mahasiswa']='auth/register_mahasiswa';
-$route['register_dosen']='auth/register_dosen';
+$route['register']='auth/register';
 
 //route untuk dosen
 $route['dosen']='dosen';
@@ -35,7 +34,6 @@ $route['nilai']='nilai';
 $route['nilai/tambah']='nilai/tambah';
 $route['nilai/ubah(:any)']='nilai/ubahSoal/$1';
 $route['nilai/hapus/(:any)']='nilai/hapus/$1';
-$route['nilai/hasilDosen']='nilai/hasilDosen';
 //route end nilai
 
 //route untuk soalModel

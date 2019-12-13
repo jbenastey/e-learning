@@ -79,4 +79,5 @@ class PenggunaModel extends CI_Model
         //mengembalikan nilai 1 jika ada baris yang terpengaruhi
         return $this->db->affected_rows();
     }
+
 }

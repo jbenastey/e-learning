@@ -1,6 +1,5 @@
 <?php
 
-
 class modul extends CI_Controller
 {
     public function __construct()
@@ -8,6 +7,7 @@ class modul extends CI_Controller
         parent::__construct();
         $this->load->model('ModulModel', 'modul');
         $this->load->model('QuizModel', 'quiz');
+        $this->load->model('AuthModel', 'auth');
         $this->load->helper('class_helper');
     }
 
@@ -15,8 +15,37 @@ class modul extends CI_Controller
     public function index($id_matkul)
     {
         $this->session->set_userdata('matkul_id', $id_matkul);
-        $data['modul'] = $this->modul->get_modul($id_matkul);
-        $this->load->view('templates/header');
+//		echo '<pre>';var_dump($id_matkul);exit();
+		$data['modul'] = $this->modul->get_modul($id_matkul);
+
+
+		if (!empty($data['modul'])){
+			$data['modul'] = $this->modul->get_modul($id_matkul);
+			$kodeKelas = $data['modul'][0]['kode_kelas'];
+			$data['totalMahasiswa']=$this->auth->hitung_mahasiswa($kodeKelas);
+			$data['anggota'] = $this->modul->get_anggota_kelas($kodeKelas);
+			$data['breadcrumb'] = array(
+				'<li class="breadcrumb-item"><a href="'.base_url().'">Home</a></li>',
+				'<li class="breadcrumb-item active">'.$data['modul'][0]['matkul_nama'].'</li>'
+			);
+//			echo '<pre>';print_r($data['breadcrumb']);exit();
+
+			if (!empty($data['anggota'])){
+				$data['anggota'] = $this->modul->get_anggota_kelas($kodeKelas);
+			}else{
+				$data['anggota'] = null;
+			}
+		}else{
+			$data['modul'] = null;
+			$data['totalMahasiswa'] = null;
+			$data['anggota'] = null;
+		}
+
+		$data['posting']=$this->modul->get_posting();
+		$data['id_matakuliah'] = $id_matkul;
+
+
+		$this->load->view('templates/header');
         $this->load->view('modul/index', $data);
         $this->load->view('templates/footer');
     }
@@ -36,15 +65,22 @@ class modul extends CI_Controller
     public function insertModul($idmatkul)
     {
         if (isset($_POST['simpan'])) {
+
+            $pertemuan = $this->modul->totalModulByMatkul($idmatkul);
+
             $dataModul = array(
+                'nama_pertemuan' => 'Pertemuan '.($pertemuan+1),
                 'nama_modul' => $this->input->post('nama_modul'),
-                'paket_id' => $idmatkul,
+                'paket_id' => $idmatkul
             );
+
             $statusInsert = $this->modul->insert_modul($dataModul);
 
             if ($statusInsert > 0) {
+                $this->session->set_flashdata('alert','simpan_data');
                 redirect('modul/index/' . $idmatkul);
             } else {
+                $this->session->set_flashdata('alert','data_tidak_tersimpan');
                 redirect('modul/tambah/' . $idmatkul);
             }
 //            echo "<pre>";
@@ -72,6 +108,7 @@ class modul extends CI_Controller
         //bernilai satu jjika ada baris terpengaruh data berhasil diubah
         $statusUbah = $this->modul->edit_modul($idModul, $dataUbah);
         if ($statusUbah > 0) {
+
             $this->session->set_flashdata('alert','ubah_data');
             redirect('modul/index/' . $this->input->post('id_matkul'));
         } else {
@@ -82,21 +119,29 @@ class modul extends CI_Controller
 
     public function lihatModul($idModul)
     {
-        /*$data['modul'] = $this->modul->get_modul();
-        $data['detail'] = $this->modul->get_modul_by_id($idModul);
-        $this->load->view('templates/header',$data);
-        $this->load->view('modul/lihat',$data);
-        $this->load->view('templates/footer',$data);*/
-//        $data['modul'] = $this->modul->get_modul();
+		$id_matkul = $this->session->userdata('matkul_id');
 
+        $data['tugas'] = $this->modul->get_tugas_by_modul($idModul);
         $data['detail'] = $this->modul->get_modul_by_id($idModul);
-        $data['submodul'] = $this->modul->get_sub_modul($idModul);
-        $data['nilai'] = $this->modul->get_nilai_sub_modul($idModul);
-        $data['ujian'] = $this->quiz->get_all_ujian();
+		$data['nilai'] = $this->modul->get_nilai_sub_modul($idModul);
+		$data['ujian'] = $this->quiz->get_all_ujian();
+		$data['modul'] = $this->modul->get_modul($id_matkul);
 
-//        echo '<pre>';
-//        var_dump($data['nilai']);die;
-//
+//		echo '<pre>';
+//		print_r($data['detail']);exit();
+
+		$data['submodul'] = $this->modul->get_sub_modul($idModul);
+
+		if (!empty($data['submodul'])) {
+			$data['submodul'] = $this->modul->get_sub_modul($idModul);
+			$data['breadcrumb'] = array(
+				'<li class="breadcrumb-item"><a href="' . base_url() . '">Home</a></li>',
+				'<li class="breadcrumb-item"><a href="' . base_url('modul/index/' . $id_matkul) . '">' . $data['modul'][0]['matkul_nama'] . '</a></li>',
+				'<li class="breadcrumb-item active">' . $data['submodul'][0]['nama_modul'] . '</li>',
+			);
+		} else {
+			$data['submodul'] = null;
+		}
 
         $this->load->view('templates/header', $data);
         $this->load->view('modul/lihat', $data);
@@ -113,7 +158,6 @@ class modul extends CI_Controller
         $this->load->view('templates/footer', $data);
 
     }
-
     public function hapusModul($idModul, $idMatkul)
     {
         $statusDelete = $this->modul->hapus_modul($idModul);
@@ -170,13 +214,13 @@ class modul extends CI_Controller
 
             $dataSubModul = array(
                 'id_modul' => $idModul,
-                /*  'matkul_id' => $idMatkul,*/
                 'nama_sub_modul' => $this->input->post('nama_sub_modul'),
                 'keterangan' => $this->input->post('keterangan'),
                 'dokumen_ppt' => $ppt,
                 'dokumen_pdf' => $pdf,
 
             );
+//            echo '<pre>';print_r($dataSubModul);exit();
             $statusInsert = $this->modul->insert_sub_modul($dataSubModul);
             if ($statusInsert > 0) {
                 redirect('modul/lihatSubModul/' . $idModul);
@@ -253,5 +297,99 @@ class modul extends CI_Controller
             redirect('sub_modul/' . $idModul);
         }
     }
+    public function insertPosting()
+    {
+        if (isset($_POST['posting']))
+        {
+            $id_matkul = $this->session->userdata('matkul_id');
+            $this->session->set_userdata('matkul_id', $id_matkul);
+            $data['modul'] = $this->modul->get_modul($id_matkul);
+            $kodeKelas = $data['modul'][0]['kode_kelas'];
+            $data=array(
+                'judul'=>$this->input->post('judul'),
+                'isi_posting'=>$this->input->post('isi_posting'),
+                'kode_kelas'=>$kodeKelas,
+                'id_pengguna'=>$this->session->userdata('matkul_id')
+
+            );
+
+//            print_r($data);exit();
+            $status=$this->modul->insert_posting($data);
+
+            if ($status>0)
+            {
+                redirect('modul/index/'.$id_matkul);
+            }
+        }else{
+            show_404();
+        }
+    }
+
+    public function insertTugas($idModul)
+    {
+        if (isset($_POST['posting'])){
+            $tugas = array(
+              'judul_tugas' => $this->input->post('judul_tugas'),
+              'tenggat_tugas' => $this->input->post('tenggat'),
+              'id_modul' => $idModul
+            );
+
+            $status = $this->modul->insertTugas($tugas);
+
+            if ($status > 0){
+                redirect('modul/lihat/'.$idModul);
+            }
+        }else{
+            show_404();
+        }
+    }
+
+    public function kerjakanTugas($idTugas)
+    {
+        $data['tugas'] = $this->modul->get_tugas_by_id($idTugas);
+//        print_r($data['tugas']);exit();
+        $this->load->view('templates/header', $data);
+        $this->load->view('modul/tugas/kerjakan', $data);
+        $this->load->view('templates/footer', $data);
+    }
+
+    public function serahkanTugas($idTugas)
+    {
+        $idModul = $this->modul->get_tugas_by_id($idTugas);
+        $config['upload_path'] = './assets/dokumen/tugas/';
+        $config['allowed_types'] = 'pptx|pdf|doc|docx';
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+
+//		print_r($idModul);exit();
+		$this->upload->do_upload('dokumen');
+		$ppt = $this->upload->data('file_name');
+
+
+		$tugas = array(
+          'id_pengguna' => $this->session->userdata('id_pengguna'),
+            'id_tugas' => $idModul['id_tugas'],
+            'dokumen_tugas' => $ppt,
+            'deskripsi' =>  $this->input->post('deskripsi'),
+            'id_modul' => $idModul['id_modul']
+        );
+
+
+        $status = $this->modul->serahkan_tugas($tugas);
+        if ($status > 0){
+            redirect('modul/lihat/'.$idModul['id_modul']);
+        }
+    }
+
+	public function hasilTugas($idTugas)
+	{
+		$data['tugas'] = $this->modul->get_tugas_by_id($idTugas);
+		$data['hasiltugas'] = $this->modul->get_hasitugas_by_tugas($idTugas);
+
+//		echo '<pre>';print_r($data['hasiltugas']);exit();
+		$this->load->view('templates/header', $data);
+		$this->load->view('modul/tugas/hasil', $data);
+		$this->load->view('templates/footer', $data);
+	}
 }
 

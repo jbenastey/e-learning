@@ -10,7 +10,6 @@ class Ujian extends CI_Controller
         $this->load->model('SoalModel', 'soal');
         $this->load->model('ModulModel', 'modul');
 
-		$this->load->helper('class');
     }
 
     public function index()

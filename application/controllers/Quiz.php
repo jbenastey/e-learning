@@ -17,47 +17,6 @@ class Quiz extends CI_Controller
         $data['soal'] = $this->quiz->get_soal($id_ujian);
         $data['idSubmodul'] = $id_ujian;
 
-//		var_dump($data['quiz']);die;
-
-        $cek = $this->quiz->cek_ujian($id_ujian, $this->session->userdata('id_pengguna'));
-
-        if ($cek == null){
-        	$waktu_mulai = date('Y-m-d H:i:s');
-			$habis = strtotime('+'.$data['quiz']['durasi_ujian'].'minutes');
-			$waktu_habis = date('Y-m-d H:i:s',$habis);
-
-//			var_dump($waktu_mulai);
-
-			shuffle($data['soal']);
-			$soal = array();
-			foreach ($data['soal'] as $key=>$value){
-//				$soal = json_encode($value);
-				array_push($soal,$value);
-			}
-			$array = array(
-				'id_ujian' => $id_ujian,
-				'id_pengguna' => $this->session->userdata('id_pengguna'),
-				'waktu_mulai' => $waktu_mulai,
-				'waktu_habis' => $waktu_habis,
-				'soal' => json_encode($soal),
-			);
-
-			$this->quiz->tambah_sementara($array);
-
-			$data['waktu_habis'] = str_replace('-','/',$waktu_habis);
-			$data['soalnya'] = json_encode($soal);
-
-//
-		} else {
-			$data['waktu_habis'] = str_replace('-','/',$cek['waktu_habis']);
-			$data['soalnya'] = $cek['soal'];
-		}
-
-
-//        echo '<pre>';
-//        var_dump($data['soal']);
-//        die;
-
 //        $penggunaId = $this->session->userdata('id_pengguna');
 //        $dataUjian = array(
 //            'id_ujian' => $id_ujian,
@@ -78,26 +37,14 @@ class Quiz extends CI_Controller
     {
         $idPengguna = $this->session->userdata('id_pengguna');
         $soals = $this->quiz->get_soal_by_submodul($idSubmodul);
-        $id_soal = array();
         $jawaban = array();
-        $data_soal = array();
-        $data_jawaban = array();
         $kunciJawaban = array();
         $nilaiBenar = 0;
         $nilaiDetail = array();
         for ($i = 0; $i < count($soals); $i++){
-            $id_soal[$i] = $this->input->post('id-'.$i);
             $jawaban[$i] = $this->input->post('jawaban-'.$i);
             $kunciJawaban[$i] = ($soals[$i]['kunci_jawaban']);
-            array_push($data_soal,array(
-                'id_soal' => $id_soal[$i],
-                'jawaban' => $jawaban[$i],
-            ));
-        }
-        sort($data_soal);
-        for ($i = 0; $i < count($soals); $i++){
-            array_push($data_jawaban,$data_soal[$i]['jawaban']);
-            if ($kunciJawaban[$i] == $data_soal[$i]['jawaban']){
+            if ($kunciJawaban[$i] == $jawaban[$i]){
                 $nilaiDetail[$i] = 'benar';
                 $nilaiBenar = $nilaiBenar+1;
             }
@@ -110,15 +57,10 @@ class Quiz extends CI_Controller
             'id_ujian' => $idSubmodul,
             'id_pengguna' => $idPengguna,
             'nilai' => $nilai,
-            'jawaban_detail' => json_encode($data_jawaban),
+            'jawaban_detail' => json_encode($jawaban),
             'nilai_detail' => json_encode($nilaiDetail)
         );
-//        echo '<pre>';
-//        var_dump($id_soal);
-//        var_dump($dataNilai);
-//        var_dump($data_jawaban);
 //        var_dump($jawaban);
-//        var_dump($data_soal);die;
 //        var_dump($kunciJawaban);die;
         $save = $this->quiz->finish_ujian($dataNilai);
         if ($save > 0){
@@ -133,7 +75,7 @@ class Quiz extends CI_Controller
 
     public function lihat($id){
         $idPengguna = $this->session->userdata('id_pengguna');
-        $data['ujian'] = $this->quiz->get_quiz_mhs($id,$idPengguna);
+        $data['ujian'] = $this->quiz->get_quiz($id);
         $data['soal'] = $this->quiz->get_soal($id);
         $data['hasil'] = $this->quiz->get_ujian_row($id,$idPengguna);
 

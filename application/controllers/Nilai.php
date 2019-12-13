@@ -7,9 +7,6 @@ class Nilai extends CI_Controller
     {
         parent::__construct();
         $this->load->model('NilaiModel', 'nilai');
-        $this->load->model('QuizModel', 'quiz');
-
-		$this->load->helper('class');
     }
 
     public function index()
@@ -101,28 +98,5 @@ class Nilai extends CI_Controller
         } else {
             redirect('nilai');
         }
-    }
-
-    public function hasilDosen($id_subModul)
-    {
-        $data['nilai']=$this->nilai->get_nilai_by_subModul($id_subModul);
-//        echo '<pre>';
-//        var_dump($data['nilai']);
-//        exit();
-        $this->load->view('templates/header');
-        $this->load->view('nilai/hasilDosen',$data);
-        $this->load->view('templates/footer');
-    }
-    public function detailhasilDosen($id_hasil)
-    {
-        $nilai=$this->nilai->get_nilai_by_id($id_hasil);
-
-        $data['ujian'] = $this->quiz->get_quiz_mhs($nilai['id_ujian'],$nilai['id_pengguna']);
-        $data['soal'] = $this->quiz->get_soal($nilai['id_ujian']);
-        $data['hasil'] = $this->quiz->get_ujian_row($nilai['id_ujian'],$nilai['id_pengguna']);
-//        var_dump($nilai);die;
-        $this->load->view('templates/header');
-        $this->load->view('nilai/detailhasilDosen',$data);
-        $this->load->view('templates/footer');
     }
 }

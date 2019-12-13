@@ -1,7 +1,7 @@
 $(document).ready(function () {
   /*  console.log('test');*/
     let baseURL=window.location.origin+'/e-learning-rps/'; //development
-    // console.log(baseURL);
+    /*console.log(baseURL);*/
     let inputDosen=$('#nama-dosen');
 
     //menjalankan fungsi
@@ -10,7 +10,6 @@ $(document).ready(function () {
     function injectInput() {
         let url = baseURL + 'Service/dosens';
         let dataDosen = [];
-        // console.log(url);
         $.ajax({
             url: url,
             asyc: true,
@@ -19,23 +18,20 @@ $(document).ready(function () {
             cache: false,
 
             success: function (response) {
-                // console.log(response);
                 for (let i = 0; i < response.length; i++) {
                     dataDosen.push({
-                        'id': response[i].id_dosen,
-                        'nip': response[i].nip_nik_dosen,
-                        'nama': response[i].nama_dosen,
-                        'jurusan': response[i].jurusan_dosen
+                        'id': response[i].dosen_id,
+                        'nama': response[i].dosen_nama,
+                        'jurusan': response[i].dosen_jurusan
 
                     });
 
                 }
+                // console.log(dataDosen);
 
             }
 
         });
-        console.log(dataDosen);
-
         var options={
             data:dataDosen,
             getValue:"nama",
@@ -52,8 +48,7 @@ $(document).ready(function () {
                 },
                 onClickEvent:function () {
                     let idDosen=inputDosen.getSelectedItemData().id;
-                    let nipDosen=inputDosen.getSelectedItemData().nip;
-                    $('#nip_dosen').val(nipDosen);
+                    $('#dosen').val(idDosen);
                 }
             }
 

@@ -27,7 +27,6 @@
                                             <tr role="row">
 <!--                                                <th style="width: 123px;">ID UJIAN</th>-->
                                                 <th style="width: 201px;">SOAL</th>
-                                                <th style="width: 201px;">Audio</th>
                                                 <th style="width: 91px;">JAWABAN A</th>
                                                 <th style="width: 91px;">JAWABAN B</th>
                                                 <th style="width: 91px;">JAWABAN C</th>

@@ -9,9 +9,7 @@
                 <input type="text" class="form-control position-relative" id="validationTooltip01" name="nama_modul"
                        placeholder="Username"
                        value="<?= $data['nama_modul'] ?>" required="">
-                <div class="valid-tooltip">
-                    Looks good!
-                </div>
+
             </div>
         <div>
             <button class="btn btn-primary" type="submit" name="ubah">Ubah</button>

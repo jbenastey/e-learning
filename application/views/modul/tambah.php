@@ -2,13 +2,9 @@
     <div class="form-row">
 
         <div class="col-md-12 mb-3">
-            <label for="validationTooltip01">Nama Modul</label>
+            <label for="validationTooltip">Nama Modul</label>
             <input type="text" class="form-control position-relative" id="validationTooltip01" name="nama_modul"
-                   placeholder="modul"
-                   value="" required="">
-            <div class="valid-tooltip">
-                Looks good!
-            </div>
+                   placeholder="modul" value="" required="">
         </div>
 
 

@@ -2,7 +2,7 @@
 <html class="loading" lang="en" data-textdirection="ltr">
 <!-- BEGIN: Head-->
 
-<!-- Mirrored from themeselection.com/demo/chameleon-admin-template/html/ltr/vertical-menu-template/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 May 2019 10:15:47 GMT -->
+<!-- Mirrored from themeselection.com/demo/chameleon-admin-template/html/ltr/vertical-menu-template/register.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 May 2019 10:20:18 GMT -->
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,13 +10,12 @@
     <meta name="description" content="Chameleon Admin is a modern Bootstrap 4 webapp &amp; admin dashboard html template with a large number of components, elegant design, clean and organized code.">
     <meta name="keywords" content="admin template, Chameleon admin template, dashboard template, gradient admin template, responsive admin template, webapp, eCommerce dashboard, analytic dashboard">
     <meta name="author" content="ThemeSelect">
-    <title>Login - Chameleon Admin - Modern Bootstrap 4 WebApp & Dashboard HTML Template + UI Kit</title>
+    <title>Register with Background Color - Chameleon Admin - Modern Bootstrap 4 WebApp & Dashboard HTML Template + UI Kit</title>
     <link rel="apple-touch-icon" href="<?=base_url()?>/assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="<?=base_url()?>/assets/images/ico/favicon.ico">
     <link href="../../../../../../fonts.googleapis.com/css93c2.css?family=Muli:300,300i,400,400i,600,600i,700,700i%7CComfortaa:300,400,700" rel="stylesheet">
 
     <!-- BEGIN: Vendor CSS-->
-    <link rel="stylesheet" type="text/css" href="<?=base_url()?>/assets/fonts/feather/style.min.css ">
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>/assets/vendors/css/vendors.min.css">
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>/assets/vendors/css/forms/toggle/switchery.min.css">
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>/assets/css/plugins/forms/switch.min.css">
@@ -24,10 +23,10 @@
     <!-- END: Vendor CSS-->
 
     <!-- BEGIN: Theme CSS-->
-    <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/css/bootstrap-extended.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/css/colors.min.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/css/components.min.css">
+    <link rel="stylesheet" type="text/css" href="<?=base_url()?>/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="<?=base_url()?>/assets/css/bootstrap-extended.css">
+    <link rel="stylesheet" type="text/css" href="<?=base_url()?>/assets/css/colors.min.css">
+    <link rel="stylesheet" type="text/css" href="<?=base_url()?>/assets/css/components.min.css">
     <!-- END: Theme CSS-->
 
     <!-- BEGIN: Page CSS-->
@@ -37,7 +36,7 @@
     <!-- END: Page CSS-->
 
     <!-- BEGIN: Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="<?= base_url()?>/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../../../assets/css/style.css">
     <!-- END: Custom CSS-->
 
 </head>
@@ -60,46 +59,47 @@
                                     <img src="<?=base_url()?>/assets/images/logo/logo_uin.jpg" width="80" alt="branding logo">
                                 </div>
                                 <div class="font-large-1  text-center">
-                                    E-Learning
+                                    Register
                                 </div>
                             </div>
                             <div class="card-content">
 
                                 <div class="card-body">
-                                    <form class="form-horizontal" action="<?=base_url('auth/login')?>" method="post" novalidate>
+                                    <form class="form-horizontal"method="post" action="<?=base_url('auth/insertMahasiswa')?>" novalidate>
                                         <fieldset class="form-group position-relative has-icon-left">
-                                            <input type="text" class="form-control round" id="user-name" name="username" placeholder="Your Username" required>
+                                            <input type="text" class="form-control round" id="user-name" placeholder="Enter Nim" required name="username_pengguna">
                                             <div class="form-control-position">
                                                 <i class="ft-user"></i>
                                             </div>
                                         </fieldset>
                                         <fieldset class="form-group position-relative has-icon-left">
-                                            <input type="password" class="form-control round" id="user-password" name="password" placeholder="Enter Password" required>
+                                            <input type="text" class="form-control round" id="user-name" placeholder="Enter name" required name="username_pengguna">
+                                            <div class="form-control-position">
+                                                <i class="ft-user"></i>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="form-group position-relative has-icon-left">
+                                            <input type="password" class="form-control round" id="user-password" placeholder="Enter Password" required name="password_pengguna">
                                             <div class="form-control-position">
                                                 <i class="ft-lock"></i>
                                             </div>
                                         </fieldset>
-                                        <div class="form-group row">
-                                            <div class="col-md-6 col-12 text-center text-sm-left">
 
-                                            </div>
-                                            <div class="col-md-6 col-12 float-sm-left text-center text-sm-right"><a href="recover-password.html" class="card-link">Forgot Password?</a></div>
-                                        </div>
                                         <div class="form-group text-center">
-                                            <button type="submit" name="login" class="btn round btn-block btn-glow btn-bg-gradient-x-purple-blue col-12 mr-1 mb-1">Login</button>
+                                            <button type="submit" name="simpan" class="btn round btn-block btn-glow btn-bg-gradient-x-purple-blue col-12 mr-1 mb-1">Register</button>
                                         </div>
 
                                     </form>
-                                </div>
-
-
-                                <p class="card-subtitle text-muted text-right font-small-3 mx-2 my-1"><span>Don't have an account ? <a href="<?php   echo base_url('register')?>">Sign Up</a></span></p>
+                                <p class="card-subtitle text-muted text-right font-small-3 mx-2 my-1">
+                        <span>Already a member ?
+                            <a href="login.html" class="card-link">Sign In</a>
+                        </span>
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-
         </div>
     </div>
 </div>
@@ -128,5 +128,5 @@
 </body>
 <!-- END: Body-->
 
-<!-- Mirrored from themeselection.com/demo/chameleon-admin-template/html/ltr/vertical-menu-template/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 May 2019 10:15:50 GMT -->
+<!-- Mirrored from themeselection.com/demo/chameleon-admin-template/html/ltr/vertical-menu-template/register.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 30 May 2019 10:20:18 GMT -->
 </html>

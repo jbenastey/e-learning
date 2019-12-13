@@ -8,7 +8,6 @@ class Auth extends CI_Controller
     {
         parent::__construct();
         $this->load->model('AuthModel', 'auth');
-        $this->load->model('DosenModel', 'dosen');
     }
 
     public function login()
@@ -44,89 +43,31 @@ class Auth extends CI_Controller
         //arahkan halamn kembali ke login
         redirect('login');
     }
-    public function register_mahasiswa()
+    public function register()
     {
-        $this->load->view('auth/register_mahasiswa');
-    }
-    public function register_dosen()
-    {
-        $this->load->view('auth/register_dosen');
+        $this->load->view('auth/register');
     }
     public function insertMahasiswa()
 
     {
         if (isset($_POST['simpan'])) {
             $data = array(
-                'nama_pengguna' => $this->input->post('nama_pengguna'),
                 'username_pengguna' => $this->input->post('username_pengguna'),
                 'password_pengguna' => md5($this->input->post('password_pengguna')),
                 'level_pengguna' => 'mahasiswa'
             );
-            $validasiPengguna = $this->auth->validasiPengguna($data['username_pengguna']);
+            $statusInsert = $this->auth->insert_mahasiswa($data);
 
-            if ($validasiPengguna > 0) {
-                $this->session->set_flashdata('alert', 'errorregister');
-                redirect('register_mahasiswa');
+            if ($statusInsert > 0) {
+                redirect('login');
             } else {
-                $statusInsert = $this->auth->insert_mahasiswa($data);
-
-                if ($statusInsert > 0) {
-                    redirect('login');
-                } else {
-                    redirect('register');
-                }
+                redirect('register');
             }
-        } else {
-            show_404();
-        }
-    }
-//            $statusInsert = $this->auth->insert_mahasiswa($data);
-//
-//            if ($statusInsert > 0) {
-//                redirect('login');
-//            } else {
-//                redirect('register');
-//            }
-////            echo "<pre>";
-////            print_r($dataPengguna);
-//        } else {
-//            show_404();
-//        }
-//    }
-
-    public function registerDosen()
-    {
-        if (isset($_POST['simpan'])) {
-            $data = array(
-                'nama_pengguna' => $this->input->post('nama_pengguna'),
-                'username_pengguna' => str_replace(" ","",$this->input->post('username_pengguna')),
-                'password_pengguna' => md5($this->input->post('password_pengguna')),
-                'level_pengguna' => 'dosen'
-            );
 //            echo "<pre>";
-//            print_r($data);
-//            exit();
-
-            $validasiPengguna= $this->auth->validasiPengguna($data['username_pengguna']);
-
-            if ($validasiPengguna > 0){
-                $this->session->set_flashdata('alert','errorregister');
-                redirect('register_dosen');
-            } else {
-                $statusInsert = $this->auth->insert_dosen($data);
-
-                if ($statusInsert > 0) {
-                    redirect('login');
-                } else {
-                    redirect('register');
-                }
-            }
+//            print_r($dataPengguna);
         } else {
             show_404();
         }
     }
-    function dosen(){
-        $dosen = $this->dosen->get_dosen();
-        echo json_encode($dosen);
-    }
+
 }

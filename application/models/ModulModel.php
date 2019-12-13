@@ -19,9 +19,13 @@ class ModulModel extends CI_Model
     public function get_modul($id_matkul)
     {
         //perintah untuk mengambil data array
-        $this->db->where('paket_id',$id_matkul);
-        $soal=$this->db->get('modul');
-        //mengembalikan dataa array
+        $this->db->from('modul');
+        $this->db->join('paket', 'paket.paket_id = modul.paket_id');
+        $this->db->join('matkul', 'matkul.matkul_id = paket.paket_matkul_id');
+        $this->db->join('dosen', 'dosen.id_dosen= paket.paket_dosen_id');
+        $this->db->where('modul.paket_id',$id_matkul);
+        $soal=$this->db->get();
+        //mengembalikan data array
         return $soal->result_array();
     }
     public function get_modul_by_id($idModul)
@@ -37,6 +41,27 @@ class ModulModel extends CI_Model
         return $soal->row_array();
 
     }
+    public function get_anggota_kelas($kodeKelas){
+        $this->db->from('kelas');
+        $this->db->join('pengguna', 'pengguna.id_pengguna= kelas.id_pengguna');
+        $this->db->where('kelas.kode_kelas',$kodeKelas);
+        $soal=$this->db->get();
+        //mengembalikan dataa array
+        return $soal->result_array();
+    }
+    public function totalModulByMatkul($idmatkul)
+    {
+        $this->db->select('*');
+        $this->db->from('modul');
+
+        //fungdi db>where param1=nama kolom, param2=nilsi ysng diinginkn
+        $this->db->where('paket_id',$idmatkul);
+        ///menyimpan data berupa ibjek je variabel soal
+        $soal=$this->db->get();
+
+        return $soal->num_rows();
+    }
+
     public function insert_modul($dataModul)
     {
         /*
@@ -72,9 +97,7 @@ class ModulModel extends CI_Model
     //start sub modul
     public function get_sub_modul($id_modul)
     {
-//        $this->db->from('sub_modul');
         $this->db->join('modul','sub_modul.id_modul=modul.id_modul');
-//        $this->db->join('nilai','nilai.id_ujian=sub_modul.id_sub_modul','left');
         $this->db->where('sub_modul.id_modul',$id_modul);
         $modul=$this->db->get('sub_modul');
         return $modul->result_array();
@@ -159,4 +182,72 @@ class ModulModel extends CI_Model
         $modul=$this->db->get('sub_modul');
         return $modul->row_array();*/
     }
+
+    public function get_paket_by_id($idPaket)
+    {
+        $this->db->from('paket');
+        $this->db->join('matkul', 'matkul.matkul_id= paket.paket_matkul_id');
+        $this->db->join('dosen', 'dosen.id_dosen= paket.paket_dosen_id');
+        $this->db->where('paket_id',$idPaket);
+
+        $paket=$this->db->get();
+        return $paket->row_array();
+    }
+    public function insert_posting($data)
+    {
+        $this->db->insert('postingan', $data);
+        //mengambalikan nilai 1 jika ada baris yang terpengaruh di tabel
+        return $this->db->affected_rows();
+    }
+    public function get_posting()
+    {
+        $this->db->order_by('waktu_posting','desc');
+        return $this->db->get('postingan')->result_array();
+
+    }
+
+    public function insertTugas($tugas)
+    {
+        $this->db->insert('tugas',$tugas);
+        return $this->db->affected_rows();
+    }
+
+    public function get_tugas_by_modul($idModul)
+    {
+        $this->db->from('tugas');
+        $this->db->join('modul','modul.id_modul= tugas.id_modul');
+        $this->db->where('tugas.id_modul',$idModul);
+        return $this->db->get()->result_array();
+    }
+    public function get_tugas_by_id($idTugas)
+    {
+        $this->db->from('tugas');
+        $this->db->join('modul','modul.id_modul= tugas.id_modul');
+        $this->db->where('tugas.id_tugas',$idTugas);
+        return $this->db->get()->row_array();
+    }
+    public function serahkan_tugas($tugas)
+    {
+        $this->db->insert('mengerjakan_tugas',$tugas);
+        return $this->db->affected_rows();
+    }
+	public function telah_mengerjakan_tugas($pengguna,$tugas)
+	{
+		$this->db->select('*');
+		$this->db->from('mengerjakan_tugas');
+		$this->db->where('id_pengguna',$pengguna);
+		$this->db->where('id_tugas',$tugas);
+		$exists =  $this->db->get()->num_rows();
+		return $exists > 0 ? true : false;
+	}
+
+	public function get_hasitugas_by_tugas($idTugas)
+	{
+		$this->db->from('mengerjakan_tugas');
+		$this->db->join('pengguna','pengguna.id_pengguna= mengerjakan_tugas.id_pengguna');
+		$this->db->join('tugas','tugas.id_tugas= mengerjakan_tugas.id_tugas');
+		$this->db->join('modul','modul.id_modul= mengerjakan_tugas.id_modul');
+		$this->db->where('mengerjakan_tugas.id_tugas',$idTugas);
+		return $this->db->get()->result_array();
+	}
 }

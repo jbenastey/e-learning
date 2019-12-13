@@ -1,54 +1,62 @@
 <div class="card">
+    <div class="card-header">
+        <h5 class="float-left"> Detail Quiz </h5>
+        <div class="row">
+            <div class="col-6">
+                <?php
+                if ($ujian == null):?>
+                    <a class="btn btn-primary"
+                       href="<?= base_url('ujian/tambah/' . $this->uri->segment(3)) ?>">Tambah</a>
+                <?php else: ?>
+                    <a class="btn btn-primary"
+                       href="<?= base_url('ujian/ubah/' . $this->uri->segment(3)) ?>">Ubah</a>
+                <?php endif; ?>
+            </div>
+        </div>
         <div class="card-body">
-			<div class="float-left">
-				<?php
-				if ($ujian == null):?>
-					<a class="btn btn-primary btn-sm"
-					   href="<?= base_url('ujian/tambah/' . $this->uri->segment(3)) ?>"><i class="ft-plus"></i> Tambah</a>
-				<?php else: ?>
-					<a class="btn btn-success btn-sm"
-					   href="<?= base_url('ujian/ubah/' . $this->uri->segment(3)) ?>"><i class="ft-edit"></i> Ubah</a>
-				<?php endif; ?>
-			</div>
-			<h2 class="text-center pr-5">  Detail Quiz </h2>
-			<dl class="row">
-				<dt class="col-sm-3 text-right">Nama Dosen</dt>
-				<dd class="col-sm-9"> <?= $ujian['nama_dosen'] ?></dd>
-			</dl>
-			<dl class="row">
-				<dt class="col-sm-3 text-right">Sub Modul</dt>
-				<dd class="col-sm-9"><?= $ujian['nama_sub_modul'] ?></dd>
-			</dl>
-			<dl class="row">
-				<dt class="col-sm-3 text-right">Kelas</dt>
-				<dd class="col-sm-9"> <?= kelas($ujian['kelas_ujian']) ?></dd>
-			</dl>
-			<dl class="row">
-				<dt class="col-sm-3 text-right">Nilai Minimal</dt>
-				<dd class="col-sm-9"><?= $ujian['nilai_minimal_ujian'] ?></dd>
-			</dl>
-			<dl class="row">
-				<dt class="col-sm-3 text-right">Durasi quiz</dt>
-				<dd class="col-sm-9"><?= $ujian['durasi_ujian'] ?> menit</dd>
-			</dl>
-
-		</div>
+            <table class="table table-bordered table-responsive">
+                <tr>
+                    <td>Nama Dosen : <?= $ujian['nama_dosen'] ?></td>
+                    <td>Sub Modul : <?= $ujian['nama_sub_modul'] ?></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Kelas : <?= $ujian['kelas_ujian'] ?></td>
+                    <td>Nilai Minimal : <?= $ujian['nilai_minimal_ujian'] ?></td>
+                    <td>Durasi Quiz : <?= $ujian['durasi_ujian'] ?> menit</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </div>
 <?php
 if ($ujian != null):?>
     <div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-6">
+                <h5>Soal</h5>
+            </div>
+            <div class="col-6">
+                <a class="btn btn-primary float-right"
+                   href="<?= base_url() ?>soal/tambah/<?= $ujian['id_sub_modul'] ?>">Tambah</a>
+            </div>
+        </div>
+    </div>
     <div class="card-body">
-		<a class="btn btn-primary btn-sm float-left"
-		   href="<?= base_url() ?>soal/tambah/<?= $ujian['id_sub_modul'] ?>"><i class="ft-plus"></i> Tambah</a>
-		<h2 class="text-center pr-5">Soal</h2>
-        <div class="">
-            <table class="table table-striped table-bordered zero-configuration table-responsive">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered zero-configuration">
                 <thead>
                 <tr>
                     <th>NO</th>
                     <th>SOAL</th>
-					<th>JAWABAN</th>
+                    <th>JAWABAN A</th>
+                    <th>JAWABAN B</th>
+                    <th>JAWABAN C</th>
+                    <th>JAWABAN D</th>
+                    <th>JAWABAN E</th>
                     <th>KUNCI JAWABAN</th>
+                    <th>TANGGAL BUAT</th>
                     <th class="sorting text-center" style="width:80%">AKSI
                     </th>
                 </tr>
@@ -59,44 +67,14 @@ if ($ujian != null):?>
                 foreach ($soal as $row => $index): ?>
                     <tr>
                         <td><?= $nomor ?></td>
-                        <td>
-							<?= $index['soal'] ?>
-							<br><br>
-							<?php
-							if($index['audio'] == null):
-								?>
-								<button class="btn btn-sm btn-primary">Tidak ada audio </button>
-							<?php
-							else:
-								?>
-								<audio controls>
-									<source src="<?= base_url('assets/dokumen/audio/'.$index['audio']) ?>" type="audio/mpeg">
-									Your browser does not support the audio element.
-								</audio>
-							<?php
-							endif
-							?>
-						</td>
-                        <td>
-							<ol type="A">
-								<li>
-									<?= $index['jawaban_soal_a'] ?>
-								</li>
-								<li>
-									<?= $index['jawaban_soal_b'] ?>
-								</li>
-								<li>
-									<?= $index['jawaban_soal_c'] ?>
-								</li>
-								<li>
-									<?= $index['jawaban_soal_d'] ?>
-								</li>
-								<li>
-									<?= $index['jawaban_soal_e'] ?>
-								</li>
-							</ol>
-						</td>
+                        <td><?= $index['soal'] ?></td>
+                        <td><?= $index['jawaban_soal_a'] ?></td>
+                        <td><?= $index['jawaban_soal_b'] ?></td>
+                        <td><?= $index['jawaban_soal_c'] ?></td>
+                        <td><?= $index['jawaban_soal_d'] ?></td>
+                        <td><?= $index['jawaban_soal_e'] ?></td>
                         <td><?= $index['kunci_jawaban'] ?></td>
+                        <td><?= $index['tgl_buat_soal'] ?></td>
                         <td width="110" class="text-center row justify-content-center">
                             <a href="<?= base_url('soal/ubah/' . $index['id_soal']) ?>"
                                class="btn btn-sm btn-success bg-darken-4">
